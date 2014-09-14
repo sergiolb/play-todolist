@@ -5,5 +5,20 @@
 # Home page
 GET     /                           controllers.Application.index
 
+
+######### Tasks ########
+   
+# Vista de tareas
+GET   /tasks                        controllers.Application.tasks
+
+# Constructor
+POST  /tasks                        controllers.Application.newTask
+
+# Borrado
+POST  /tasks/:id/delete             controllers.Application.deleteTask(id:Long)
+
+
+##### Recursos ####
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
