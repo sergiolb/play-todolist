@@ -1,23 +1,44 @@
 package controllers
 
+//librerias
 import play.api._
 import play.api.mvc._
+import play.api.data._
+import play.api.data.Forms._
 
+//Dependencias
+import models.Task
+
+//Controlador principal de la aplicación
 object Application extends Controller {
 
+  //Declaración del form que utilizamos, sirve para realizar la validación
+  val taskForm= Form(
+    "label" -> nonEmptyText
+  )
+
   def index = Action {
-    //Ok(views.html.index("Your new application is ready."))
-    Redirect(routes.Application.tasks)//Redirecciona con código 303
+    Redirect(routes.Application.tasks) //Redirecciona con código 303
   }
 
+  
+
   //Tareas
-  def tasks = TODO //TODO:cÓDIGO 501
+  def tasks = Action {
+    //Ok("Bien")
+    Ok(views.html.index(Task.all(), taskForm))
+    
+  }
+
 
   //Constructor
-  def newTask = TODO
+  def newTask = TODO//TODO:cÓDIGO 501
+
 
   //Borrado
   def deleteTask(id: Long) = TODO
 
 
 }
+
+
