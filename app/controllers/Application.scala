@@ -31,7 +31,7 @@ object Application extends Controller {
   }
 
 
-  //Constructor
+  //*Action de crear tarea*
   def newTask = Action{
     implicit request => taskForm.bindFromRequest.fold(//peticion interna de la página
       errors => BadRequest(views.html.index(Task.all(),errors)),//si hay errores se recarga la página con código 400
@@ -43,9 +43,12 @@ object Application extends Controller {
   }
 
 
-  //Borrado
-  def deleteTask(id: Long) = TODO
-
+  //*Action de borrar tarea* 
+  //Invoca al método de borrar tarea y redirecciona
+  def deleteTask(id: Long) = Action{
+    Task.delete(id)
+    Redirect(routes.Application.tasks)
+  }
 
 }
 
