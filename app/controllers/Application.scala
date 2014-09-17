@@ -32,7 +32,15 @@ object Application extends Controller {
 
 
   //Constructor
-  def newTask = TODO//TODO:cÓDIGO 501
+  def newTask = Action{
+    implicit request => taskForm.bindFromRequest.fold(//peticion interna de la página
+      errors => BadRequest(views.html.index(Task.all(),errors)),//si hay errores se recarga la página con código 400
+      label => {
+        Task.create(label)
+        Redirect(routes.Application.tasks)//Redirigimos a la vista para ver todas las tareas
+      }
+    )
+  }
 
 
   //Borrado
