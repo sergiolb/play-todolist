@@ -27,11 +27,11 @@ object Application extends Controller {
 
   
 
-  //Tareas
+  //*Lista de Tareas*
   def tasks = Action {
-    //Ok("Bien")
-    Ok(views.html.index(Task.all(), taskForm))
-    
+    val tareas=Task.all()//Obtenemos las tareas de la BD
+    val json=Json.toJson(tareas)//Convertimos las tareas a Json
+    Ok(json)
   }
 
 
