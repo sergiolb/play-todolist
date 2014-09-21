@@ -4,6 +4,7 @@ import play.api.db._
 import play.api.Play.current
 import anorm._
 import anorm.SqlParser._
+import play.api.libs.json._
 
 
 case class Task(id:Long, label:String)
@@ -18,9 +19,10 @@ object Task {
       }
    }
 
+
    //Devuelve una lista de tareas a partir de la BD
    def all(): List[Task] =DB.withConnection{//helper DB.withconnection crear y connecta la conexion JDBC
-      implicit c =>SQL("select * from task").as(task *)//metodo as permite parsear el ResultSet usando el parseadpr "task *"
+      implicit c =>SQL("select * from task").as(task *)//metodo as permite parsear el ResultSet usando el parseador "task *"
    }
 
    //Crea una tarea en la BD con la columna 'label' con el nombre pasado
@@ -38,5 +40,28 @@ object Task {
       }
 
    }
-   
+
+   //*Ver tarea por Id*
+   //Devuelve la tarea parseada si existe y null sino
+   def byId(id: Long):Task=DB.withConnection{
+      implicit c => 
+          val query=SQL("select * from task where id = {id}").on('id -> id)
+          task.single(query()) match{//hacemos comprobación por si no hay ninguna fila con ese id
+            case Success(user) => user
+            case Error(e) => null
+          }
+      }
+
+/*
+val rowOption = SQL("select id from users where username = {username} and password = {password} limit 1")
+        .on('username -> username, 'password -> password)
+        .apply
+        .headOption
+    rowOption match {
+      case Some(row) => Some(row[Long]("id"))  // the uid
+      case None => None
+    }*/
+
 }
+
+

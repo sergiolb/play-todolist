@@ -18,6 +18,9 @@ POST  /tasks                        controllers.Application.newTask
 POST  /tasks/:id/delete             controllers.Application.deleteTask(id:Long)
 
 
+# Consulta
+GET /tasks/:id                      controllers.Application.task(id:Long)
+
 ##### Recursos ####
 
 # Map static resources from the /public folder to the /assets URL path

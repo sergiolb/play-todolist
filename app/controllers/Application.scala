@@ -6,6 +6,10 @@ import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
 
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
+
+
 //Dependencias
 import models.Task
 
@@ -48,6 +52,31 @@ object Application extends Controller {
   def deleteTask(id: Long) = Action{
     Task.delete(id)
     Redirect(routes.Application.tasks)
+  }
+
+
+
+  implicit val taskWrites = new Writes[Task]{
+      def writes(task: Task) = Json.obj(
+         "label" -> task.label,
+         "id" -> task.id 
+      )
+   }
+
+
+
+  //*Action de ver tarea*
+  //Devuelve una tarea en formato JSON si existe el id recibido, si no devuelve un 404
+  def task(id: Long) = Action{
+      val t=Task.byId(id)//extraemos la tarea de BD, devuelve null sino
+
+      if(t!= null){
+        val json= Json.toJson(t)
+        Ok(json)
+      }
+      else {
+        NotFound
+      }
   }
 
 }
