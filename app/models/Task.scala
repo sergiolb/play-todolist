@@ -47,7 +47,7 @@ object Task {
       implicit c => 
           val query=SQL("select * from task where id = {id}").on('id -> id)
           task.single(query()) match{//hacemos comprobación por si no hay ninguna fila con ese id
-            case Success(user) => user
+            case Success(t) => t
             case Error(e) => null
           }
       }

@@ -40,8 +40,9 @@ object Application extends Controller {
     implicit request => taskForm.bindFromRequest.fold(//peticion interna de la página
       errors => BadRequest(views.html.index(Task.all(),errors)),//si hay errores se recarga la página con código 400
       label => {
-        Task.create(label)
-        Redirect(routes.Application.tasks)//Redirigimos a la vista para ver todas las tareas
+        Task.create(label)//Creamos la nueva tarea
+        val json=Json.toJson(label)// Trasformamos a json la descripción para dla respuesta
+        Created(json)//Devolvemos la descripción con código 201
       }
     )
   }
@@ -55,15 +56,12 @@ object Application extends Controller {
   }
 
 
-
   implicit val taskWrites = new Writes[Task]{
       def writes(task: Task) = Json.obj(
          "label" -> task.label,
          "id" -> task.id 
       )
-   }
-
-
+  }
 
   //*Action de ver tarea*
   //Devuelve una tarea en formato JSON si existe el id recibido, si no devuelve un 404
