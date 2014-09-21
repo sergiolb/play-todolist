@@ -28,7 +28,9 @@ object Task {
    //Crea una tarea en la BD con la columna 'label' con el nombre pasado
    def create(label: String) {
       DB.withConnection{
-         implicit c => SQL("insert into task (label) values ({label})").on('label -> label).executeUpdate()
+         implicit c => 
+         val query=SQL("insert into task (label) values ({label})").on('label -> label).executeUpdate()
+         
       }
 
    }

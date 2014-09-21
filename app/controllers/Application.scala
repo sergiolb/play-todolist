@@ -48,11 +48,30 @@ object Application extends Controller {
   }
 
 
+//@Util
+//@Catch(value =Exception.class)
+  
+  
   //*Action de borrar tarea* 
   //Invoca al método de borrar tarea y redirecciona
-  def deleteTask(id: Long) = Action{
-    Task.delete(id)
-    Redirect(routes.Application.tasks)
+  def deleteTask(id: Long) = Action{  
+    val t=Task.byId(id)
+    if(t!=null){
+      Task.delete(id)
+      Ok
+    }
+    else{
+      NotFound
+    }
+
+    /*try{
+      Task.delete(id)
+      Ok
+    }
+    catch{
+       case _ => NotFound//NotFound
+
+    }*/
   }
 
 
