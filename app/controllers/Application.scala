@@ -43,6 +43,10 @@ object Application extends Controller {
         Task.create(label)//Creamos la nueva tarea
         val json=Json.toJson(label)// Trasformamos a json la descripción para dla respuesta
         Created(json)//Devolvemos la descripción con código 201
+
+        /*val url = Task.create(label)
+        Created.withHeaders(LOCATION -> "google.com")*/
+        
       }
     )
   }

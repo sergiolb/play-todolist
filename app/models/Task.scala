@@ -54,6 +54,14 @@ object Task {
           }
       }
 
+    //Función auxiliar para conocer el número de tareas
+    def count():Long=DB.withConnection{
+      implicit c=>
+      SQL("select count(*) from task").as(scalar[Long].single)
+    }
+
+
+
 /*
 val rowOption = SQL("select id from users where username = {username} and password = {password} limit 1")
         .on('username -> username, 'password -> password)
