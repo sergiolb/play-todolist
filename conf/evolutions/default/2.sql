@@ -11,13 +11,20 @@ create table taskUser (
 ;
 
 
-create sequence taskUser_seq start with 1000;
-create sequence task_seq start with 1000;
-alter table task add constraint fk_task_taskUser_1 foreign key (taskUser_user) references taskUser (user) on delete restrict on update restrict;
+alter table task add user varchar (255) not null;
+alter table task add constraint fk_task_taskUser_1 foreign key (user) references taskUser (user) on delete restrict on update restrict;
+
+
+insert into taskUser (user,name) values (  'Anonymous','');
+insert into taskUser (user,name) values (  'Sergio','Sergio López');
+insert into taskUser (user,name) values (  'Pablo','Pablo Gil');
+insert into taskUser (user,name) values (  'Pedro','Pedro Paredes');
 
 # --- !Downs
 
 SET REFERENTIAL_INTEGRITY FALSE;
+
+delete from taskUser 
 
 drop table if exists taskUser;
 
@@ -25,6 +32,3 @@ drop table if exists task;
 
 SET REFERENTIAL_INTEGRITY TRUE;
 
-drop sequence if exists taskUser_seq;
-
-drop sequence if exists task_seq;
