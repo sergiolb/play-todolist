@@ -95,7 +95,8 @@ object Application extends Controller {
   implicit val taskWrites = new Writes[Task]{
       def writes(task: Task) = Json.obj(
          "label" -> task.label,
-         "id" -> task.id 
+         "id" -> task.id,
+         "alias" -> task.alias
       )
   }
 
