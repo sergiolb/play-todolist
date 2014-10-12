@@ -29,7 +29,7 @@ object Application extends Controller {
   )
 
   def index = Action {
-    Redirect(routes.Application.tasks) //Redirecciona con código 303
+    Redirect("/tasks") //Redirecciona con código 303
   }
 
   
@@ -113,6 +113,15 @@ object Application extends Controller {
         NotFound
       }
   }
+
+  //*Action de ver tarea*
+  //Devuelve una tarea en formato JSON si existe el id recibido, si no devuelve un 404
+  def tasksbyAlias(alias: String) = Action{
+    val tareas=Task.allbyAlias(alias)//Obtenemos las tareas de la BD
+    val json=Json.toJson(tareas)//Convertimos las tareas a Json
+    Ok(json)
+  }
+
 
 
  

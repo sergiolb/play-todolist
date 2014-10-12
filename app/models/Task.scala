@@ -56,6 +56,13 @@ object Task {
           }
       }
 
+    //Devuelve todas las tareas del usuario especificado por alias
+   def allbyAlias(alias: String): List[Task] =DB.withConnection{//helper DB.withconnection crear y connecta la conexion JDBC
+      implicit c =>SQL("select * from task where alias = {alias}").on('alias -> alias).as(task *)//metodo as permite parsear el ResultSet usando el parseador "task *"
+   }
+
+
+
     //Función auxiliar para conocer el número de tareas
     def count():Long=DB.withConnection{
       implicit c=>

@@ -8,20 +8,20 @@ GET     /                           controllers.Application.index
 
 ######### Tasks ########
    
-# Vista de tareas
-GET   /tasks                        controllers.Application.tasks
+# Vista de tareas de anónimo
+GET   /tasks                        controllers.Application.tasksbyAlias(alias:String = "Anonymous")
 
 # Constructor
 POST  /tasks                        controllers.Application.newTask(alias:String = "Anonymous")
-POST  /users/:alias/tasks            controllers.Application.newTask(alias:String)
+POST  /users/:alias/tasks           controllers.Application.newTask(alias:String)
 
 # Borrado
 DELETE  /tasks/:id                  controllers.Application.deleteTask(id:Long)
 
 
-# Consulta
+# Consulta, por ID y por usuario
 GET /tasks/:id                      controllers.Application.task(id:Long)
-#GET /users/:alias/tasks
+GET /users/:alias/tasks             controllers.Application.tasksbyAlias(alias:String)
 
 ##### Recursos ####
 
