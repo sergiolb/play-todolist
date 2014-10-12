@@ -9,6 +9,8 @@ import play.api.data.Forms._
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
+import play.api.db._
+
 
 //Dependencias
 import models.Task
@@ -17,8 +19,13 @@ import models.Task
 object Application extends Controller {
 
   //Declaración del form que utilizamos, sirve para realizar la validación
-  val taskForm= Form(
-    "label" -> nonEmptyText
+  val taskForm = Form(
+    //mapping(
+      "label" -> nonEmptyText//,
+      //"alias" -> default(text,"Anonymous")
+    //)
+    //((label,user) => Task(0,label,user))
+    //(Task.apply)(Task.unapply)
   )
 
   def index = Action {
@@ -36,17 +43,23 @@ object Application extends Controller {
 
 
   //*Action de crear tarea*
-  def newTask = Action{
+  def newTask(alias: String) = Action{
     implicit request => taskForm.bindFromRequest.fold(//peticion interna de la página
       errors => BadRequest(views.html.index(Task.all(),errors)),//si hay errores se recarga la página con código 400
       label => {
-        Task.create(label)//Creamos la nueva tarea
-        val json=Json.toJson(label)// Trasformamos a json la descripción para dla respuesta
-        Created(json)//Devolvemos la descripción con código 201
-
-        /*val url = Task.create(label)
-        Created.withHeaders(LOCATION -> "google.com")*/
         
+        try{
+          Task.create(label,alias)//Creamos la nueva tarea
+          
+          val json=Json.toJson(label)// Trasformamos a json la descripción para la respuesta
+          Created(json)//Devolvemos la descripción con código 201
+
+          /*val url = Task.create(label)
+          Created.withHeaders(LOCATION -> "google.com")*/
+        }
+        catch{//capturamos si se pruduce excepcion en la BD por no existir el usuario
+          case nf:Exception => NotFound
+        }
       }
     )
   }
@@ -99,6 +112,9 @@ object Application extends Controller {
         NotFound
       }
   }
+
+
+ 
 
 }
 

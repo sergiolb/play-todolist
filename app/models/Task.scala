@@ -7,16 +7,18 @@ import anorm.SqlParser._
 import play.api.libs.json._
 
 
-case class Task(id:Long, label:String)
+case class Task(id:Long, label:String,alias: String)
 
 object Task {
 
    //Parseador, dada una fila JDBC crea un valor de Task
    val task = {
       get[Long]("id") ~ 
-      get[String]("label") map {
-         case id~label => Task(id, label)
+      get[String]("label") ~
+      get[String]("alias") map {
+         case id~label~alias => Task(id, label,alias)
       }
+     
    }
 
 
@@ -25,11 +27,11 @@ object Task {
       implicit c =>SQL("select * from task").as(task *)//metodo as permite parsear el ResultSet usando el parseador "task *"
    }
 
-   //Crea una tarea en la BD con la columna 'label' con el nombre pasado
-   def create(label: String) {
+   //Crea una tarea en la BD con la columna 'label' con el nombre pasado y el usuario asignado
+   def create(label: String, alias: String) {
       DB.withConnection{
          implicit c => 
-         val query=SQL("insert into task (label) values ({label})").on('label -> label).executeUpdate()
+         val query=SQL("insert into task (label,alias) values ({label},{alias})").on('label -> label, 'alias -> alias).executeUpdate()
          
       }
 

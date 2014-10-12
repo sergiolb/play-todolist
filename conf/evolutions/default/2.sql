@@ -5,20 +5,20 @@
 
 
 create table taskUser (
-  user                      varchar(255),
-  name                      varchar(255) not null,
-  constraint pk_taskUser primary key (user))
+  alias                      varchar(255) not null,
+  name                      varchar(255),
+  constraint pk_taskUser primary key (alias))
 ;
 
 
-alter table task add user varchar (255) not null;
-alter table task add constraint fk_task_taskUser_1 foreign key (user) references taskUser (user) on delete restrict on update restrict;
+alter table task add alias varchar (255) not null;
+alter table task add constraint fk_task_taskUser_1 foreign key (alias) references taskUser (alias) on delete restrict on update restrict;
 
 
-insert into taskUser (user,name) values (  'Anonymous','');
-insert into taskUser (user,name) values (  'Sergio','Sergio López');
-insert into taskUser (user,name) values (  'Pablo','Pablo Gil');
-insert into taskUser (user,name) values (  'Pedro','Pedro Paredes');
+insert into taskUser (alias,name) values ('Anonymous','');
+insert into taskUser (alias,name) values ('Sergio','Sergio López');
+insert into taskUser (alias,name) values ('Pablo','Pablo Gil');
+insert into taskUser (alias,name) values ('Pedro','Pedro Paredes');
 
 # --- !Downs
 

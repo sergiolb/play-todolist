@@ -18,7 +18,7 @@
 
    <h2>Add a new task</h2>
     
-   @form(routes.Application.newTask) {
+   @form(routes.Application.newTask("Anonymous")) {
       @inputText(taskForm("label")) 
       <input type="submit" value="Create">
    }
