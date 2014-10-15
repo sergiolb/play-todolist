@@ -6,8 +6,11 @@ import anorm._
 import anorm.SqlParser._
 import play.api.libs.json._
 
+import java.util.{Date}
 
-case class Task(id:Long, label:String,alias: String)
+case class TextTask(label:String,dateE:Option[String])
+
+case class Task(id:Long, label:String,alias: String,dateE:Option[Date])
 
 object Task {
 
@@ -15,10 +18,10 @@ object Task {
    val task = {
       get[Long]("id") ~ 
       get[String]("label") ~
-      get[String]("alias") map {
-         case id~label~alias => Task(id, label,alias)
+      get[String]("alias") ~
+      get[Option[Date]]("dateE") map {
+         case id~label~alias~dateE => Task(id, label,alias,dateE)
       }
-     
    }
 
 
@@ -28,11 +31,17 @@ object Task {
    }
 
    //Crea una tarea en la BD con la columna 'label' con el nombre pasado y el usuario asignado
-   def create(label: String, alias: String) {
+   def create(label: String, alias: String,dateE:Date) {
       DB.withConnection{
-         implicit c => 
-         val query=SQL("insert into task (label,alias) values ({label},{alias})").on('label -> label, 'alias -> alias).executeUpdate()
-         
+          implicit c =>
+
+          if(dateE!=null){
+            val query=SQL("insert into task (label,alias,dateE) values ({label},{alias},{dateE})").on('label -> label, 'alias -> alias,'dateE -> dateE).executeUpdate()
+          }
+          else{
+            val query=SQL("insert into task (label,alias) values ({label},{alias})").on('label -> label, 'alias -> alias).executeUpdate()
+         }
+
       }
 
    }
@@ -80,6 +89,9 @@ val rowOption = SQL("select id from users where username = {username} and passwo
       case Some(row) => Some(row[Long]("id"))  // the uid
       case None => None
     }*/
+
+    
+
 
 }
 

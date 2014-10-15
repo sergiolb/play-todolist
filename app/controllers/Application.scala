@@ -10,6 +10,7 @@ import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
 import play.api.db._
+import java.util.{Date}
 
 
 //Dependencias
@@ -18,14 +19,16 @@ import models.Task
 //Controlador principal de la aplicación
 object Application extends Controller {
 
+  case class TextTask(label:String,dateE:Option[String])//Clase auxiliar para contener los parámetros recibidos en el POST
+  
+
   //Declaración del form que utilizamos, sirve para realizar la validación
   val taskForm = Form(
-    //mapping(
-      "label" -> nonEmptyText//,
-      //"alias" -> default(text,"Anonymous")
-    //)
-    //((label,user) => Task(0,label,user))
-    //(Task.apply)(Task.unapply)
+    mapping(
+      "label" -> nonEmptyText,
+      "dateE" -> optional(text)
+    )
+    (TextTask.apply)(TextTask.unapply)
   )
 
   def index = Action {
@@ -33,7 +36,6 @@ object Application extends Controller {
   }
 
   
-
   //*Lista de Tareas*
   def tasks = Action {
     val tareas=Task.all()//Obtenemos las tareas de la BD
@@ -44,12 +46,23 @@ object Application extends Controller {
 
   //*Action de crear tarea*
   def newTask(alias: String) = Action{
+    
     implicit request => taskForm.bindFromRequest.fold(//peticion interna de la página
-      errors => BadRequest(views.html.index(Task.all(),errors)),//si hay errores se recarga la página con código 400
-      label => {
-        
+      errors => BadRequest(errors.errorsAsJson),//si hay errores se recarga la página con código 400
+      
+      taskForm => {//utilizamos el formulario para coger los parámetros
         try{
-          Task.create(label,alias)//Creamos la nueva tarea
+          var label:String=taskForm.label
+          var dateE =taskForm.dateE.getOrElse("")
+
+          if(dateE!=""){ 
+              val format=new java.text.SimpleDateFormat("dd/MM/yyyy")
+              var date=format.parse(dateE)
+              Task.create(label,alias,date)//Creamos la nueva tarea
+          }
+          else{
+            Task.create(label,alias,null)//Creamos la nueva tarea
+          }
           
           val json=Json.toJson(label)// Trasformamos a json la descripción para la respuesta
           Created(json)//Devolvemos la descripción con código 201
@@ -57,18 +70,14 @@ object Application extends Controller {
           /*val url = Task.create(label)
           Created.withHeaders(LOCATION -> "google.com")*/
         }
-        catch{//capturamos si se pruduce excepcion en la BD por no existir el usuario
-          case nf:Exception => NotFound
+        catch {//capturamos una posuble excepcion por no existir el usuario u otra causa
+          case nf: Exception => NotFound
         }
+        
       }
     )
   }
 
-
-//@Util
-//@Catch(value =Exception.class)
-  
-  
   //*Action de borrar tarea* 
   //Invoca al método de borrar tarea y redirecciona
   def deleteTask(id: Long) = Action{  
@@ -81,23 +90,31 @@ object Application extends Controller {
       NotFound
     }
 
-    /*try{
-      Task.delete(id)
-      Ok
-    }
-    catch{
-       case _ => NotFound//NotFound
-
-    }*/
   }
 
 
   implicit val taskWrites = new Writes[Task]{
-      def writes(task: Task) = Json.obj(
-         "label" -> task.label,
-         "id" -> task.id,
-         "alias" -> task.alias
-      )
+
+      def writes(task: Task) ={
+        var showDate=""
+        var date=task.dateE.getOrElse("No tiene")
+        if(date !="No tiene"){
+          showDate=new java.text.SimpleDateFormat("dd/MM/yyyy").format(date)
+        }
+        else{
+          showDate="No tiene"
+        }
+
+        JsObject(
+
+          Seq(
+              "id" -> JsString(task.id.toString),
+              "label" -> JsString(task.label),
+              "alias" -> JsString(task.alias),
+              "Fecha Fin" -> JsString(showDate)
+          )   
+        )
+      }
   }
 
   //*Action de ver tarea*
@@ -122,9 +139,6 @@ object Application extends Controller {
     Ok(json)
   }
 
-
-
- 
 
 }
 
