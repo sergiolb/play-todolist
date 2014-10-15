@@ -79,6 +79,12 @@ object Task {
     }
 
 
+    def allExpired():List[Task]=DB.withConnection{//helper DB.withconnection crear y connecta la conexion JDBC
+      var today=new Date
+
+      implicit c =>SQL("select * from task where dateE < {today} ").on('today -> today).as(task *)//metodo as permite parsear el ResultSet usando el parseador "task *"
+   }
+
 
 /*
 val rowOption = SQL("select id from users where username = {username} and password = {password} limit 1")

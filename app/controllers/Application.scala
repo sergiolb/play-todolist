@@ -140,6 +140,15 @@ object Application extends Controller {
   }
 
 
+  def allExpired =Action{
+    val tareas=Task.allExpired()
+    val json=Json.toJson(tareas)//Convertimos las tareas a Json
+    Ok(json)
+  }
+
+
+
+
 }
 
 

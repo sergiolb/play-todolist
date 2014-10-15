@@ -23,6 +23,7 @@ DELETE  /tasks/:id                  controllers.Application.deleteTask(id:Long)
 GET /tasks/:id                      controllers.Application.task(id:Long)
 GET /users/:alias/tasks             controllers.Application.tasksbyAlias(alias:String)
 
+GET /tasks/expired/                 controllers.Application.allExpired
 ##### Recursos ####
 
 # Map static resources from the /public folder to the /assets URL path
