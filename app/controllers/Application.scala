@@ -140,8 +140,16 @@ object Application extends Controller {
   }
 
 
+  //*Action de ver las tareas caducadas *
   def allExpired =Action{
     val tareas=Task.allExpired()
+    val json=Json.toJson(tareas)//Convertimos las tareas a Json
+    Ok(json)
+  }
+
+  def allBefore(d:Int,m:Int,y:Int)=Action{
+    val date=new Date(d+"/"+m+"/"+y)
+    val tareas=Task.allBefore(date)
     val json=Json.toJson(tareas)//Convertimos las tareas a Json
     Ok(json)
   }

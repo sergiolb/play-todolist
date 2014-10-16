@@ -19,11 +19,16 @@ POST  /users/:alias/tasks           controllers.Application.newTask(alias:String
 DELETE  /tasks/:id                  controllers.Application.deleteTask(id:Long)
 
 
-# Consulta, por ID y por usuario
+# Consultas varias
+GET /tasks/expired                  controllers.Application.allExpired
+GET /tasks/before/:d-:m-:y          controllers.Application.allBefore(d:Int,m:Int,y:Int)
 GET /tasks/:id                      controllers.Application.task(id:Long)
 GET /users/:alias/tasks             controllers.Application.tasksbyAlias(alias:String)
 
-GET /tasks/expired/                 controllers.Application.allExpired
+
+#Modificaciones de tareas
+####PUT /tasks/:id/date                controllers.Application.changeDate(id:Long)
+
 ##### Recursos ####
 
 # Map static resources from the /public folder to the /assets URL path
