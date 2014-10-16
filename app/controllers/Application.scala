@@ -20,8 +20,6 @@ import models.Task
 object Application extends Controller {
 
   case class TextTask(label:String,dateE:Option[String])//Clase auxiliar para contener los parámetros recibidos en el POST
-  
-
   //Declaración del form que utilizamos, sirve para realizar la validación
   val taskForm = Form(
     mapping(
@@ -181,7 +179,7 @@ object Application extends Controller {
               var date=format.parse(dateE)
               
               if(Task.changeDate(id,date)==1){ Ok}
-              else Status(304)
+              else Status(200)
           }
           else{
             Status(304)
