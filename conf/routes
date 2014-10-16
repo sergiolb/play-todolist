@@ -27,7 +27,7 @@ GET /users/:alias/tasks             controllers.Application.tasksbyAlias(alias:S
 
 
 #Modificaciones de tareas
-####PUT /tasks/:id/date                controllers.Application.changeDate(id:Long)
+PUT /tasks/:id                controllers.Application.changeDate(id:Long)
 
 ##### Recursos ####
 

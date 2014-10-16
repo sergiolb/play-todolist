@@ -31,6 +31,20 @@ object Application extends Controller {
     (TextTask.apply)(TextTask.unapply)
   )
 
+  //Declaración del form que utilizamos, sirve para realizar la validación
+  val taskFormChanging = Form(
+    mapping(
+      "label" -> default(text,""),
+      "dateE" -> optional(text)
+    )
+    //((dateE) => TextTask("",dateE))
+    (TextTask.apply)(TextTask.unapply)
+
+  )
+
+
+
+
   def index = Action {
     Redirect("/tasks") //Redirecciona con código 303
   }
@@ -155,8 +169,26 @@ object Application extends Controller {
   }
 
 
+  def changeDate(id:Long)=Action{
+    implicit request => taskFormChanging.bindFromRequest.fold(//peticion interna de la página
+      errors => BadRequest(errors.errorsAsJson),//si hay errores se recarga la página con código 400
+      
+      taskFormChanging => {//utilizamos el formulario para coger los parámetros
+          var dateE =taskFormChanging.dateE.getOrElse("")
+
+          if(dateE!=""){ 
+              val format=new java.text.SimpleDateFormat("dd/MM/yyyy")
+              var date=format.parse(dateE)
+              
+              if(Task.changeDate(id,date)==1){ Ok}
+              else Status(304)
+          }
+          else{
+            Status(304)
+          }
+      }
+    )
+  }
 
 
 }
-
-

@@ -90,7 +90,7 @@ object Task {
       implicit c =>SQL("select * from task where dateE < {date} ").on('date -> date).as(task *)//metodo as permite parsear el ResultSet usando el parseador "task *"
     }
 
-    def changeDate(id:Long,date:Date):Boolean=DB.withConnection { 
+    def changeDate(id:Long,date:Date)=DB.withConnection { 
         implicit connection =>
           SQL(""" 
                 UPDATE Task SET
@@ -99,7 +99,7 @@ object Task {
           """).on(
               'id -> id,
               'dateE -> date
-          ).executeUpdate==1
+          ).executeUpdate
 
     }
 
